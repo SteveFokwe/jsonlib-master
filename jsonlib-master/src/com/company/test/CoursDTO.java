@@ -2,6 +2,7 @@ package com.company.test;
 
 import com.company.jsonlib.annotations.FieldName;
 
+// DTO représentant un cours
 public class CoursDTO {
     private String code;
 

@@ -2,6 +2,7 @@ package com.company.test;
 
 import com.company.jsonlib.annotations.FieldName;
 
+// DTO représentant un programme
 public class ProgramDTO {
     @FieldName(override = "nomProgramme")
     private String name;

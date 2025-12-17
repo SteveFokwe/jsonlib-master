@@ -5,11 +5,19 @@ import com.company.jsonlib.annotations.Ignore;
 
 import java.lang.reflect.Field;
 
+// Métadonnées d'un champ utilisées pour (dé)sérialiser
 public abstract class FieldInfo {
 
+    // Nom réel du champ
     protected String name;
+
+    // Annotation @FieldName si présente
     protected FieldName fieldNameAnnotation;
+
+    // Annotation @Ignore si présente
     protected Ignore ignoreAnnotation;
+
+    // Field réfléchi
     protected Field field;
 
     public FieldInfo(Field field) {
@@ -20,6 +28,7 @@ public abstract class FieldInfo {
         this.field.setAccessible(true);
     }
 
+    // Nom utilisé dans le JSON (ou override via @FieldName)
     public String getName() {
         if (fieldNameAnnotation != null && !fieldNameAnnotation.override().isEmpty()) {
             return fieldNameAnnotation.override();
@@ -27,10 +36,12 @@ public abstract class FieldInfo {
         return name;
     }
 
+    // Nom réel Java
     public String getRealName() {
         return name;
     }
 
+    // Indique si le champ est ignoré
     public boolean isIgnored() {
         return ignoreAnnotation != null;
     }

@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 
+// Introspecteur pour sérialisation
 public class SerialisationIntrospector extends Introspector {
 
     public SerialisationIntrospector(Object instance) {
@@ -20,6 +21,7 @@ public class SerialisationIntrospector extends Introspector {
         analyzeFields();
     }
 
+    /** Parcourt les champs déclarés et construit les FieldInfo appropriés. */
     private void analyzeFields() {
         Field[] fields = dtoType.getDeclaredFields();
 
@@ -50,6 +52,7 @@ public class SerialisationIntrospector extends Introspector {
         return type.isArray() || Collection.class.isAssignableFrom(type);
     }
 
+    // Produit JSON pour l'instance
     public String toJson(Object instance) {
         if (instance == null) {
             return "null";

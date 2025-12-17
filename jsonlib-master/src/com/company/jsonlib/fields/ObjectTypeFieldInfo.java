@@ -4,12 +4,14 @@ import com.company.jsonlib.JsonTool;
 
 import java.lang.reflect.Field;
 
+// FieldInfo pour objets (types complexes)
 public class ObjectTypeFieldInfo extends FieldInfo {
 
     public ObjectTypeFieldInfo(Field field) {
         super(field);
     }
 
+    // Assigne un objet (si compatible)
     @Override
     public void fillField(Object instance, Object value) throws Exception {
         if (value == null) {
@@ -26,6 +28,7 @@ public class ObjectTypeFieldInfo extends FieldInfo {
         }
     }
 
+    // Sérialise l'objet imbriqué en JSON
     @Override
     public String toJson(Object instance) {
         if (isIgnored()) {

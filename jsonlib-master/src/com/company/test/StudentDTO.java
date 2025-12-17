@@ -5,6 +5,7 @@ import com.company.jsonlib.annotations.Ignore;
 
 import java.util.List;
 
+// DTO représentant un étudiant
 public class StudentDTO {
     private int id;
 

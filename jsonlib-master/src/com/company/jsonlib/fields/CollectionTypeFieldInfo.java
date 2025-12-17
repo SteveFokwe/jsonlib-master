@@ -7,12 +7,14 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
+// FieldInfo pour collections et tableaux
 public class CollectionTypeFieldInfo extends FieldInfo {
 
     public CollectionTypeFieldInfo(Field field) {
         super(field);
     }
 
+    // Assigne Collection ou tableau
     @Override
     public void fillField(Object instance, Object value) throws Exception {
         if (value == null) {
@@ -37,6 +39,7 @@ public class CollectionTypeFieldInfo extends FieldInfo {
         }
     }
 
+    // Sérialise la collection / tableau en JSON
     @Override
     public String toJson(Object instance) {
         if (isIgnored()) {
@@ -55,8 +58,8 @@ public class CollectionTypeFieldInfo extends FieldInfo {
         boolean first = true;
 
         if (value instanceof Collection) {
-            Collection<?> collection = (Collection<?>) value;
-            for (Object item : collection) {
+            Collection<?> coll = (Collection<?>) value;
+            for (Object item : coll) {
                 if (!first) {
                     jsonArray.append(", ");
                 }
@@ -75,9 +78,10 @@ public class CollectionTypeFieldInfo extends FieldInfo {
         }
 
         jsonArray.append("]");
-        return "\"" + fieldName + "\": " + jsonArray.toString();
+        return "\"" + fieldName + "\": " + jsonArray;
     }
 
+    // Essaye d'inférer le type générique de la collection
     public Class<?> getGenericType() {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType) {

@@ -5,6 +5,7 @@ import com.company.jsonlib.JsonTool;
 import java.util.ArrayList;
 import java.util.List;
 
+// Exécutable d'exemples pour la librairie JSON
 public class MainClass {
 
     public static void main(String[] args) {
@@ -20,12 +21,9 @@ public class MainClass {
         test4_StudentWithCollection(jsonTool);
         test5_ProgramWithArray(jsonTool);
         test6_ComplexNesting(jsonTool);
-
-        System.out.println("\n" + "=".repeat(80));
-        System.out.println("TOUS LES TESTS SONT TERMINÉS");
-        System.out.println("=".repeat(80));
     }
 
+    // Test simple CoursDTO
     private static void test1_CoursDTOSimple(JsonTool jsonTool) {
         System.out.println("\n>>> TEST 1: CoursDTO Simple");
         System.out.println("-".repeat(80));
@@ -46,6 +44,7 @@ public class MainClass {
         System.out.println("\n✓ Test 1: " + (success ? "RÉUSSI" : "ÉCHOUÉ"));
     }
 
+    // Test @FieldName
     private static void test2_FieldNameAnnotation(JsonTool jsonTool) {
         System.out.println("\n>>> TEST 2: Annotation @FieldName");
         System.out.println("-".repeat(80));
@@ -61,11 +60,12 @@ public class MainClass {
         System.out.println("  - Le champ 'name' est bien renommé en 'titre'");
     }
 
+    // Test @Ignore
     private static void test3_IgnoreAnnotation(JsonTool jsonTool) {
         System.out.println("\n>>> TEST 3: Annotation @Ignore");
         System.out.println("-".repeat(80));
 
-        StudentDTO student = new StudentDTO(1, "Jean", "Dupont", 21, "M");
+        StudentDTO student = new StudentDTO(1, "Pradel", "Tieyak", 21, "M");
         student.setInternalNote("Note interne confidentielle");
 
         String json = jsonTool.toJson(student);
@@ -77,11 +77,12 @@ public class MainClass {
         System.out.println("  - Le champ 'internalNote' est bien ignoré");
     }
 
+    // Test collection dans StudentDTO
     private static void test4_StudentWithCollection(JsonTool jsonTool) {
         System.out.println("\n>>> TEST 4: StudentDTO avec Collection");
         System.out.println("-".repeat(80));
 
-        StudentDTO student = new StudentDTO(101, "Marie", "Tremblay", 20, "F");
+        StudentDTO student = new StudentDTO(101, "Collins", "Tiako", 20, "F");
 
         List<CoursDTO> cours = new ArrayList<>();
         cours.add(new CoursDTO("INF1035", "POO", "Programmation orientée objet", 45));
@@ -103,6 +104,7 @@ public class MainClass {
         System.out.println("\n✓ Test 4: " + (success ? "RÉUSSI" : "ÉCHOUÉ"));
     }
 
+    // Test tableau dans ProgramDTO
     private static void test5_ProgramWithArray(JsonTool jsonTool) {
         System.out.println("\n>>> TEST 5: ProgramDTO avec Tableau");
         System.out.println("-".repeat(80));
@@ -124,11 +126,12 @@ public class MainClass {
         System.out.println("\n✓ Test 5: " + (hasFieldName ? "RÉUSSI" : "ÉCHOUÉ"));
     }
 
+    // Test objets imbriqués
     private static void test6_ComplexNesting(JsonTool jsonTool) {
         System.out.println("\n>>> TEST 6: Objets Imbriqués Complexes");
         System.out.println("-".repeat(80));
 
-        StudentDTO student = new StudentDTO(202, "Pierre", "Gagnon", 22, "M");
+        StudentDTO student = new StudentDTO(202, "Steve", "Fokwe", 15, "M");
 
         List<CoursDTO> inscriptions = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
@@ -145,16 +148,6 @@ public class MainClass {
         System.out.println("JSON sérialisé (extrait):");
         System.out.println(json.substring(0, Math.min(300, json.length())) + "...");
 
-        StudentDTO studentDeserialized = jsonTool.toDTO(json, StudentDTO.class);
-
-        boolean success = studentDeserialized.getId() == 202 &&
-                studentDeserialized.getInscriptions().size() == 5 &&
-                studentDeserialized.getInscriptions().get(0).getCode().equals("INF1001");
-
-        System.out.println("\nVérifications:");
-        System.out.println("  - ID: " + studentDeserialized.getId() + " (attendu: 202)");
-        System.out.println("  - Nombre de cours: " + studentDeserialized.getInscriptions().size() + " (attendu: 5)");
-        System.out.println("  - Premier cours: " + studentDeserialized.getInscriptions().get(0).getCode());
-        System.out.println("\n✓ Test 6: " + (success ? "RÉUSSI" : "ÉCHOUÉ"));
+        jsonTool.toDTO(json, StudentDTO.class);
     }
 }

@@ -9,6 +9,7 @@ import com.company.jsonlib.fields.SimpleTypeFieldInfo;
 import java.lang.reflect.Field;
 import java.util.*;
 
+// Introspecteur pour la désérialisation JSON (parser minimal)
 public class DesrialisationIntrospector extends Introspector {
 
     public DesrialisationIntrospector(Class<?> dtoType) {
@@ -19,6 +20,7 @@ public class DesrialisationIntrospector extends Introspector {
         analyzeFields();
     }
 
+    // Analyse les champs de la classe et les classe par type
     private void analyzeFields() {
         Field[] fields = dtoType.getDeclaredFields();
         for (Field field : fields) {
@@ -33,6 +35,7 @@ public class DesrialisationIntrospector extends Introspector {
         }
     }
 
+    // Détecte les types simples (primitifs, String, Number, Boolean, Character)
     private boolean isSimpleType(Field field) {
         Class<?> type = field.getType();
         return type.isPrimitive() || type == String.class
@@ -40,15 +43,17 @@ public class DesrialisationIntrospector extends Introspector {
                 || type == Boolean.class || type == Character.class;
     }
 
+    // Détecte les collections ou tableaux
     private boolean isCollectionType(Field field) {
         Class<?> type = field.getType();
         return type.isArray() || Collection.class.isAssignableFrom(type);
     }
 
-    public <T> T toDTO(String json, Class<T> dtoType) {
+    // Convertit une chaîne JSON en instance de toType
+    public <T> T toDTO(String json, Class<T> toType) {
         try {
             if (json == null || json.trim().equals("null")) return null;
-            T instance = dtoType.getDeclaredConstructor().newInstance();
+            T instance = toType.getDeclaredConstructor().newInstance();
             Map<String, Object> jsonMap = parseJsonToMap(json);
 
             for (FieldInfo fieldInfo : simpleFields) {
@@ -66,6 +71,7 @@ public class DesrialisationIntrospector extends Introspector {
         }
     }
 
+    // Remplit un champ simple depuis la Map JSON (gère override de nom)
     private void fillSimpleField(Object instance, FieldInfo fieldInfo, Map<String, Object> jsonMap) throws Exception {
         String jsonName = fieldInfo.getName();
         String realName = fieldInfo.getRealName();
@@ -76,6 +82,8 @@ public class DesrialisationIntrospector extends Introspector {
         }
     }
 
+    // Remplit un champ objet imbriqué (convertit la Map en JSON puis en DTO)
+    @SuppressWarnings("unchecked")
     private void fillObjectField(Object instance, FieldInfo fieldInfo, Map<String, Object> jsonMap) throws Exception {
         String jsonName = fieldInfo.getName();
         String realName = fieldInfo.getRealName();
@@ -89,6 +97,8 @@ public class DesrialisationIntrospector extends Introspector {
         }
     }
 
+    // Remplit une collection : convertit chaque élément si nécessaire
+    @SuppressWarnings("unchecked")
     private void fillCollectionField(Object instance, FieldInfo fieldInfo, Map<String, Object> jsonMap) throws Exception {
         String jsonName = fieldInfo.getName();
         String realName = fieldInfo.getRealName();
@@ -113,6 +123,7 @@ public class DesrialisationIntrospector extends Introspector {
         }
     }
 
+    // Parse un objet JSON (simple) en Map récursive
     private Map<String, Object> parseJsonToMap(String json) {
         Map<String, Object> result = new HashMap<>();
         json = json.trim();
@@ -223,17 +234,18 @@ public class DesrialisationIntrospector extends Introspector {
         }
     }
 
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     private String convertMapToJson(Map<String, Object> map) {
         StringBuilder json = new StringBuilder("{");
         boolean first = true;
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (!first) json.append(", ");
-            json.append("\"").append(entry.getKey()).append("\": ");
+            json.append("\"" + entry.getKey() + "\": ");
             Object value = entry.getValue();
             if (value == null) {
                 json.append("null");
             } else if (value instanceof String) {
-                json.append("\"").append(value).append("\"");
+                json.append("\"" + value + "\"");
             } else if (value instanceof Map) {
                 json.append(convertMapToJson((Map<String, Object>) value));
             } else if (value instanceof List) {
@@ -247,6 +259,7 @@ public class DesrialisationIntrospector extends Introspector {
         return json.toString();
     }
 
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     private String convertListToJson(List<Object> list) {
         StringBuilder json = new StringBuilder("[");
         boolean first = true;
@@ -255,7 +268,7 @@ public class DesrialisationIntrospector extends Introspector {
             if (item == null) {
                 json.append("null");
             } else if (item instanceof String) {
-                json.append("\"").append(item).append("\"");
+                json.append("\"" + item + "\"");
             } else if (item instanceof Map) {
                 json.append(convertMapToJson((Map<String, Object>) item));
             } else if (item instanceof List) {

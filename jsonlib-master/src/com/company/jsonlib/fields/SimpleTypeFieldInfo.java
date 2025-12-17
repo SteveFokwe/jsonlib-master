@@ -2,12 +2,14 @@ package com.company.jsonlib.fields;
 
 import java.lang.reflect.Field;
 
+// FieldInfo pour types simples (primitifs, String)
 public class SimpleTypeFieldInfo extends FieldInfo {
 
     public SimpleTypeFieldInfo(Field field) {
         super(field);
     }
 
+    // Assigne la valeur convertie au champ
     @Override
     public void fillField(Object instance, Object value) throws Exception {
         if (value == null) {
@@ -47,6 +49,7 @@ public class SimpleTypeFieldInfo extends FieldInfo {
         }
     }
 
+    // Génère JSON pour le champ simple
     @Override
     public String toJson(Object instance) {
         if (isIgnored()) {
@@ -66,6 +69,7 @@ public class SimpleTypeFieldInfo extends FieldInfo {
             return "\"" + fieldName + "\": \"" + escapeJson(value.toString()) + "\"";
         }
     }
+
 
     private int convertToInt(Object value) {
         if (value instanceof Number) {

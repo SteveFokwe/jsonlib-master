@@ -4,6 +4,7 @@ import com.company.jsonlib.fields.FieldInfo;
 
 import java.util.List;
 
+// Base pour les introspecteurs (métadonnées de champs)
 public abstract class Introspector {
     protected Class<?> dtoType;
     protected List<FieldInfo> simpleFields;
